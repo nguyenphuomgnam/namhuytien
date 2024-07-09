@@ -165,25 +165,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                     ngayve: ngayve,
                     hinhanh: hinhanh
                 };
-
                 data.vemaybay.push(newFlight);
-               $.ajax({
-    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay',
-    type: 'POST',
-    data: JSON.stringify(newFlight),
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-    success: function(response) {
-        // Xử lý thành công
-        taiDanhSachChuyenBay(data);
-        datLaiForm();
-    },
-    error: function(xhr, status, error) {
-        // Xử lý lỗi
-        console.error('Lỗi khi thêm chuyến bay:', error);
-        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
-    }
-});
             });
         });
 
