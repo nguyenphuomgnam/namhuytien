@@ -122,10 +122,10 @@
     </div>
     <script>
 $(document).ready(function() {
-    fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') // Đường dẫn tới tệp JSON công khai
+    fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
         .then(response => response.json())
         .then(data => {
-            console.log(data.vemaybay); // Chỉ log ra phần vemaybay của JSON
+            console.log(data.vemaybay); 
             let images = $('#hinhchieu img');
             let currentIndex = 0;
 
