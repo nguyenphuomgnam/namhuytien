@@ -121,13 +121,11 @@
         </div>
     </div>
     <script>
-    fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
+        $(document).ready(function() {
+            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
       .then(response => response.json())
       .then(data => {
         console.log(data);
-      })
-      .catch(error => console.error('Error fetching JSON:', error))
-        $(document).ready(function() {
             let images = $('#hinhchieu img');
             let currentIndex = 0;
             
@@ -168,6 +166,8 @@
                     alert('rat tiec ban truy cap khong thanh cong!')
                 }
             });
+      })
+      .catch(error => console.error('Error fetching JSON:', error))
         });
     </script>
 </body>
