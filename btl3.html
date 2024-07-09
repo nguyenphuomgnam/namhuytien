@@ -167,21 +167,23 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 };
 
                 data.vemaybay.push(newFlight);
-                $.ajax({
-                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', 
-                    type: 'POST',
-                    data: JSON.stringify(data.vemaybay),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(response) {
-                        taiDanhSachChuyenBay(data);
-                        datLaiForm();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Lỗi:', error);
-                        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
-                    }
-                });
+               $.ajax({
+    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay',
+    type: 'POST',
+    data: JSON.stringify(newFlight),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(response) {
+        // Xử lý thành công
+        taiDanhSachChuyenBay(data);
+        datLaiForm();
+    },
+    error: function(xhr, status, error) {
+        // Xử lý lỗi
+        console.error('Lỗi khi thêm chuyến bay:', error);
+        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
+    }
+});
             });
         });
 
@@ -209,7 +211,6 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 $('#danhSachChuyenBay').append(item);
             });
         }
-
         function xoaChuyenBay(id) {
             if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
                 data.vemaybay = data.vemaybay.filter(chuyenbay => chuyenbay.id !== id);
@@ -318,7 +319,5 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
     })
     .catch(error => console.error('Error fetching JSON:', error));
 </script>
-
-
 </body>
 </html>
