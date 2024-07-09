@@ -166,10 +166,8 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 };
 
                 data.vemaybay.push(newFlight);
-
-                // Here you should make an AJAX POST request to your backend to update the JSON file
                 $.ajax({
-                    url: 'http://your-backend-server-url/update-vemaybay', // Your backend endpoint
+                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', // Your backend endpoint
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8",
@@ -216,7 +214,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 data.vemaybay = data.vemaybay.filter(chuyenbay => chuyenbay.id !== id);
                 // Here you should make an AJAX DELETE request to your backend to update the JSON file
                 $.ajax({
-                    url: 'http://your-backend-server-url/delete-vemaybay/' + id, // Your backend endpoint
+                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, // Your backend endpoint
                     type: 'DELETE',
                     success: function(response) {
                         taiDanhSachChuyenBay(data);
@@ -292,7 +290,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
 
             // Here you should make an AJAX PUT request to your backend to update the JSON file
             $.ajax({
-                url: 'http://your-backend-server-url/update-vemaybay/' + id, // Your backend endpoint
+                url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, // Your backend endpoint
                 type: 'PUT',
                 data: JSON.stringify(updatedFlight),
                 contentType: "application/json; charset=utf-8",
