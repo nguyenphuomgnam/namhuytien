@@ -111,6 +111,10 @@
         </div>
     </div>
 <script>
+      fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.vemaybay); 
         $(document).ready(function() {
             taiDanhSachChuyenBay();
 
@@ -150,7 +154,7 @@
                     return;
                 }
 
-                var data = {
+                var data1 = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -164,7 +168,7 @@
                 $.ajax({
                     url: 'http://localhost:3000/vemaybay',
                     type: 'POST',
-                    data: JSON.stringify(data),
+                    data: JSON.stringify(data1data1),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(response) {
@@ -180,10 +184,6 @@
         });
 
         function taiDanhSachChuyenBay() {
-            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.vemaybay); 
             $('#danhSachChuyenBay').empty();
             data.vemaybay.forEach(function(chuyenbay) {
                     var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
@@ -206,8 +206,6 @@
                     '</div>';
                     $('#danhSachChuyenBay').append(item);
                 });
-                 })
-        .catch(error => console.error('Error fetching JSON:', error))
         }
 
         function xoaChuyenBay(id) {
@@ -273,7 +271,7 @@
                 return;
             }
 
-            var data = {
+            var data2 = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -287,7 +285,7 @@
             $.ajax({
                 url: 'http://localhost:3000/vemaybay/' + id,
                 type: 'PUT',
-                data: JSON.stringify(data),
+                data: JSON.stringify(data2),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(response) {
@@ -314,7 +312,8 @@
             $('#hinhanh').val('');
             $('#divNgayVe').hide();
         }
-        
+         })
+        .catch(error => console.error('Error fetching JSON:', error))
     </script>
 </body>
 </html>
