@@ -111,13 +111,8 @@
         </div>
     </div>
     <script>
-fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        $(document).ready(function() {
-            taiDanhSachChuyenBay(data);
-
+ $(document).ready(function() {
+            taiDanhSachChuyenBay();
             $('#chieu').change(function() {
                 var chieu = $(this).val();
                 if (chieu === "1") {
@@ -137,7 +132,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 var ngayve = $('#ngayve').val();
                 var soghe = $('#soghe').val();
                 var hinhanh = $('#hinhanh').val();
-                if (!diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
+                if ( !diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
                     alert('Vui lòng nhập đầy đủ thông tin.');
                     return;
                 }
@@ -154,8 +149,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                     return;
                 }
 
-                var newFlight = {
-                    id: data.vemaybay.length + 1, // Tạm thời tạo id mới, bạn cần phải xử lý id một cách thích hợp hơn
+                var data1 = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -165,42 +159,66 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                     ngayve: ngayve,
                     hinhanh: hinhanh
                 };
-                data.vemaybay.push(newFlight);
+
+      function themChuyenBay(data1) {
+         fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', {
+        method: 'POST',
+         headers: {
+        'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(data1)
+         })
+        .then(response => response.json())
+        .then(data => {
+        taiDanhSachChuyenBay();
+        datLaiForm();
+                   })
+       .catch(error => {
+        console.error('Lỗi:', error);
+        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
+    });
+}
             });
         });
-
-        function taiDanhSachChuyenBay(data) {
+        function taiDanhSachChuyenBay() {
             $('#danhSachChuyenBay').empty();
-            data.vemaybay.forEach(function(chuyenbay) {
-                var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
-                    '<div class="mx-auto row col-md-10 col-12">'+ 
-                    '<strong class="col-md-3 col-5">Tên chuyến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.tenchuyen + '</div>' +
-                    '<strong class="col-md-3 col-5">Chiều:</strong> ' + '<div class="col-md-9 col-7">' + (chuyenbay.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</div>' +
-                    '<strong class="col-md-3 col-5">Điểm đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemdi + '</div>'+ 
-                    '<strong class="col-md-3 col-5">Điểm đến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemden + '</div>'+
-                    '<strong class="col-md-3 col-5">Số ghế:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.soghe + '</div>'+
-                    '<strong class="col-md-3 col-5">Ngày đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngaydi + '</div>';
-                    if (chuyenbay.chieu === "1") {
-                        item += '<strong class="col-md-3 col-5">Ngày về:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngayve + '</div>';
-                    }
-                    item += '<strong class="col-md-3 col-5">Link ảnh:</strong> ' + '<div class="col-md-9 col-7 link-anh">' + chuyenbay.hinhanh + '</div>' +
-                    '</div>'+
-                    '<div class="mx-auto row col-md-2 col-12 align-items-center">'+
-                        '<button type="button" class="btn btn-warning col-md-12 mt-2" style="height: 60px;" onclick="suaChuyenBay(\'' + chuyenbay.id + '\')">Sửa</button>' +
-                        '<button type="button" class="btn btn-danger col-md-12 mt-2 mb-2" style="height: 60px;" onclick="xoaChuyenBay(\'' + chuyenbay.id + '\')">Xóa</button>' +
-                    '</div>'+
-                '</div>';
-                $('#danhSachChuyenBay').append(item);
+            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.vemaybay); 
+             data.vemaybay.forEach(function(chuyenbay) {
+                    var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
+                        '<div class="mx-auto row col-md-10 col-12">'+ 
+                        '<strong class="col-md-3 col-5">Tên chuyến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.tenchuyen + '</div>' +
+                        '<strong class="col-md-3 col-5">Chiều:</strong> ' + '<div class="col-md-9 col-7">' + (chuyenbay.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</div>' +
+                        '<strong class="col-md-3 col-5">Điểm đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemdi + '</div>'+ 
+                        '<strong class="col-md-3 col-5">Điểm đến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemden + '</div>'+
+                        '<strong class="col-md-3 col-5">Số ghế:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.soghe + '</div>'+
+                        '<strong class="col-md-3 col-5">Ngày đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngaydi + '</div>';
+                        if (chuyenbay.chieu === "1") {
+                            item += '<strong class="col-md-3 col-5">Ngày về:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngayve + '</div>';
+                        }
+                        item += '<strong class="col-md-3 col-5">Link ảnh:</strong> ' + '<div class="col-md-9 col-7 link-anh">' + chuyenbay.hinhanh + '</div>' +
+                        '</div>'+
+                        '<div class="mx-auto row col-md-2 col-12 align-items-center">'+
+                            '<button type="button" class="btn btn-warning col-md-12 mt-2" style="height: 60px;" onclick="suaChuyenBay(\'' + chuyenbay.id + '\')">Sửa</button>' +
+                            '<button type="button" class="btn btn-danger col-md-12 mt-2 mb-2" style="height: 60px;" onclick="xoaChuyenBay(\'' + chuyenbay.id + '\')">Xóa</button>' +
+                        '</div>'+
+                    '</div>';
+                    $('#danhSachChuyenBay').append(item);
+                });
             });
+             })
+        .catch(error => console.error('Error fetching JSON:', error))
         }
+
         function xoaChuyenBay(id) {
             if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
-                data.vemaybay = data.vemaybay.filter(chuyenbay => chuyenbay.id !== id);
                 $.ajax({
-                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, 
+                    url: 'http://localhost:3000/vemaybay/' + id,
                     type: 'DELETE',
                     success: function(response) {
-                        taiDanhSachChuyenBay(data);
+                        taiDanhSachChuyenBay();
                     },
                     error: function(xhr, status, error) {
                         console.error('Lỗi:', error);
@@ -211,22 +229,23 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
         }
 
         function suaChuyenBay(id) {
-            var chuyenbay = data.vemaybay.find(chuyenbay => chuyenbay.id === id);
-            $('#tenchuyen').val(chuyenbay.tenchuyen);
-            $('#chieu').val(chuyenbay.chieu);
-            $('#diemdi').val(chuyenbay.diemdi);
-            $('#diemden').val(chuyenbay.diemden);
-            $('#soghe').val(chuyenbay.soghe);
-            $('#ngaydi').val(chuyenbay.ngaydi);
-            $('#ngayve').val(chuyenbay.ngayve);
-            $('#hinhanh').val(chuyenbay.hinhanh);
-        
-            if (chuyenbay.chieu === "1") {
-                $('#divNgayVe').show();
-            } else {
-                $('#divNgayVe').hide();
-            }
-            $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
+            $.get("http://localhost:3000/vemaybay/" + id, function(data, status){
+                $('#tenchuyen').val(data.tenchuyen);
+                $('#chieu').val(data.chieu);
+                $('#diemdi').val(data.diemdi);
+                $('#diemden').val(data.diemden);
+                $('#soghe').val(data.soghe);
+                $('#ngaydi').val(data.ngaydi);
+                $('#ngayve').val(data.ngayve);
+                $('#hinhanh').val(data.hinhanh);
+            
+                if (data.chieu=== "1") {
+                    $('#divNgayVe').show();
+                } else {
+                    $('#divNgayVe').hide();
+                }
+                $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
+            });
         }
 
         function capNhatChuyenBay(id) {
@@ -255,30 +274,28 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 alert('Không thể chọn ngày về khi là một chiều.');
                 return;
             }
+            var data2 = {
+                    tenchuyen: tenchuyen,
+                    chieu: chieu,
+                    diemdi: diemdi,
+                    diemden: diemden,
+                    soghe: soghe,
+                    ngaydi: ngaydi,
+                    ngayve: ngayve,
+                    hinhanh: hinhanh
+                };
 
-            var updatedFlight = {
-                id: id,
-                tenchuyen: tenchuyen,
-                chieu: chieu,
-                diemdi: diemdi,
-                diemden: diemden,
-                soghe: soghe,
-                ngaydi: ngaydi,
-                ngayve: ngayve,
-                hinhanh: hinhanh
-            };
-            var index = data.vemaybay.findIndex(chuyenbay => chuyenbay.id === id);
-            data.vemaybay[index] = updatedFlight;
             $.ajax({
-                url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, 
+                url: 'http://localhost:3000/vemaybay/' + id,
                 type: 'PUT',
-                data: JSON.stringify(updatedFlight),
+                data: JSON.stringify(data2),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(response) {
-                    taiDanhSachChuyenBay(data); 
+                    taiDanhSachChuyenBay(); 
                     datLaiForm();
                     $('#btnCapNhat').replaceWith('<button type="button" class="btn btn-primary col-md-12" id="btnGui">Đăng tin</button>');
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi:', error);
@@ -298,8 +315,6 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
             $('#hinhanh').val('');
             $('#divNgayVe').hide();
         }
-    })
-    .catch(error => console.error('Error fetching JSON:', error));
 </script>
 </body>
 </html>
