@@ -121,6 +121,13 @@
         </div>
     </div>
     <script>
+        <script>
+    fetch('https://username.github.io/repository/data.json')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => console.error('Error fetching JSON:', error))
         $(document).ready(function() {
             let images = $('#hinhchieu img');
             let currentIndex = 0;
