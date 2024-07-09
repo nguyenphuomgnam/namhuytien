@@ -152,6 +152,13 @@
     </div>
 </div>
 <script>
+    fetch('https://username.github.io/repository/data.json')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        // Xử lý dữ liệu JSON ở đây
+      })
+      .catch(error => console.error('Error fetching JSON:', error))
     $(document).ready(function() {
         $('#ql').click(function() {
                 var mk = prompt('hay nhap mat khau cho quan tri vien!');
