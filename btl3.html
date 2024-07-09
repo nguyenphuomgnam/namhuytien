@@ -111,14 +111,12 @@
         </div>
     </div>
     <script>
-        fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
-      .then(response => response.json())
-      .then(data => {
+fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
+    .then(response => response.json())
+    .then(data => {
         console.log(data);
-      })
-      .catch(error => console.error('Error fetching JSON:', error));
         $(document).ready(function() {
-            taiDanhSachChuyenBay();
+            taiDanhSachChuyenBay(data);
 
             $('#chieu').change(function() {
                 var chieu = $(this).val();
@@ -139,7 +137,7 @@
                 var ngayve = $('#ngayve').val();
                 var soghe = $('#soghe').val();
                 var hinhanh = $('#hinhanh').val();
-                if ( !diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
+                if (!diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
                     alert('Vui lòng nhập đầy đủ thông tin.');
                     return;
                 }
@@ -156,7 +154,7 @@
                     return;
                 }
 
-                var data = {
+                var newFlight = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -167,14 +165,17 @@
                     hinhanh: hinhanh
                 };
 
+                data.vemaybay.push(newFlight);
+
+                // Here you should make an AJAX POST request to your backend to update the JSON file
                 $.ajax({
-                    url: 'http://localhost:3000/vemaybay',
+                    url: 'http://your-backend-server-url/update-vemaybay', // Your backend endpoint
                     type: 'POST',
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(response) {
-                        taiDanhSachChuyenBay();
+                        taiDanhSachChuyenBay(data);
                         datLaiForm();
                     },
                     error: function(xhr, status, error) {
@@ -185,40 +186,40 @@
             });
         });
 
-        function taiDanhSachChuyenBay() {
+        function taiDanhSachChuyenBay(data) {
             $('#danhSachChuyenBay').empty();
-            $.get("http://localhost:3000/vemaybay", function(data, status){
-                data.forEach(function(chuyenbay) {
-                    var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
-                        '<div class="mx-auto row col-md-10 col-12">'+ 
-                        '<strong class="col-md-3 col-5">Tên chuyến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.tenchuyen + '</div>' +
-                        '<strong class="col-md-3 col-5">Chiều:</strong> ' + '<div class="col-md-9 col-7">' + (chuyenbay.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</div>' +
-                        '<strong class="col-md-3 col-5">Điểm đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemdi + '</div>'+ 
-                        '<strong class="col-md-3 col-5">Điểm đến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemden + '</div>'+
-                        '<strong class="col-md-3 col-5">Số ghế:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.soghe + '</div>'+
-                        '<strong class="col-md-3 col-5">Ngày đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngaydi + '</div>';
-                        if (chuyenbay.chieu === "1") {
-                            item += '<strong class="col-md-3 col-5">Ngày về:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngayve + '</div>';
-                        }
-                        item += '<strong class="col-md-3 col-5">Link ảnh:</strong> ' + '<div class="col-md-9 col-7 link-anh">' + chuyenbay.hinhanh + '</div>' +
-                        '</div>'+
-                        '<div class="mx-auto row col-md-2 col-12 align-items-center">'+
-                            '<button type="button" class="btn btn-warning col-md-12 mt-2" style="height: 60px;" onclick="suaChuyenBay(\'' + chuyenbay.id + '\')">Sửa</button>' +
-                            '<button type="button" class="btn btn-danger col-md-12 mt-2 mb-2" style="height: 60px;" onclick="xoaChuyenBay(\'' + chuyenbay.id + '\')">Xóa</button>' +
-                        '</div>'+
-                    '</div>';
-                    $('#danhSachChuyenBay').append(item);
-                });
+            data.vemaybay.forEach(function(chuyenbay) {
+                var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
+                    '<div class="mx-auto row col-md-10 col-12">'+ 
+                    '<strong class="col-md-3 col-5">Tên chuyến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.tenchuyen + '</div>' +
+                    '<strong class="col-md-3 col-5">Chiều:</strong> ' + '<div class="col-md-9 col-7">' + (chuyenbay.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</div>' +
+                    '<strong class="col-md-3 col-5">Điểm đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemdi + '</div>'+ 
+                    '<strong class="col-md-3 col-5">Điểm đến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.diemden + '</div>'+
+                    '<strong class="col-md-3 col-5">Số ghế:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.soghe + '</div>'+
+                    '<strong class="col-md-3 col-5">Ngày đi:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngaydi + '</div>';
+                    if (chuyenbay.chieu === "1") {
+                        item += '<strong class="col-md-3 col-5">Ngày về:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.ngayve + '</div>';
+                    }
+                    item += '<strong class="col-md-3 col-5">Link ảnh:</strong> ' + '<div class="col-md-9 col-7 link-anh">' + chuyenbay.hinhanh + '</div>' +
+                    '</div>'+
+                    '<div class="mx-auto row col-md-2 col-12 align-items-center">'+
+                        '<button type="button" class="btn btn-warning col-md-12 mt-2" style="height: 60px;" onclick="suaChuyenBay(\'' + chuyenbay.id + '\')">Sửa</button>' +
+                        '<button type="button" class="btn btn-danger col-md-12 mt-2 mb-2" style="height: 60px;" onclick="xoaChuyenBay(\'' + chuyenbay.id + '\')">Xóa</button>' +
+                    '</div>'+
+                '</div>';
+                $('#danhSachChuyenBay').append(item);
             });
         }
 
         function xoaChuyenBay(id) {
             if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
+                data.vemaybay = data.vemaybay.filter(chuyenbay => chuyenbay.id !== id);
+                // Here you should make an AJAX DELETE request to your backend to update the JSON file
                 $.ajax({
-                    url: 'http://localhost:3000/vemaybay/' + id,
+                    url: 'http://your-backend-server-url/delete-vemaybay/' + id, // Your backend endpoint
                     type: 'DELETE',
                     success: function(response) {
-                        taiDanhSachChuyenBay();
+                        taiDanhSachChuyenBay(data);
                     },
                     error: function(xhr, status, error) {
                         console.error('Lỗi:', error);
@@ -229,23 +230,22 @@
         }
 
         function suaChuyenBay(id) {
-            $.get("http://localhost:3000/vemaybay/" + id, function(data, status){
-                $('#tenchuyen').val(data.tenchuyen);
-                $('#chieu').val(data.chieu);
-                $('#diemdi').val(data.diemdi);
-                $('#diemden').val(data.diemden);
-                $('#soghe').val(data.soghe);
-                $('#ngaydi').val(data.ngaydi);
-                $('#ngayve').val(data.ngayve);
-                $('#hinhanh').val(data.hinhanh);
-            
-                if (data.chieu=== "1") {
-                    $('#divNgayVe').show();
-                } else {
-                    $('#divNgayVe').hide();
-                }
-                $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
-            });
+            var chuyenbay = data.vemaybay.find(chuyenbay => chuyenbay.id === id);
+            $('#tenchuyen').val(chuyenbay.tenchuyen);
+            $('#chieu').val(chuyenbay.chieu);
+            $('#diemdi').val(chuyenbay.diemdi);
+            $('#diemden').val(chuyenbay.diemden);
+            $('#soghe').val(chuyenbay.soghe);
+            $('#ngaydi').val(chuyenbay.ngaydi);
+            $('#ngayve').val(chuyenbay.ngayve);
+            $('#hinhanh').val(chuyenbay.hinhanh);
+        
+            if (chuyenbay.chieu === "1") {
+                $('#divNgayVe').show();
+            } else {
+                $('#divNgayVe').hide();
+            }
+            $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
         }
 
         function capNhatChuyenBay(id) {
@@ -275,28 +275,32 @@
                 return;
             }
 
-            var data = {
-                    tenchuyen: tenchuyen,
-                    chieu: chieu,
-                    diemdi: diemdi,
-                    diemden: diemden,
-                    soghe: soghe,
-                    ngaydi: ngaydi,
-                    ngayve: ngayve,
-                    hinhanh: hinhanh
-                };
+            var updatedFlight = {
+                id: id,
+                tenchuyen: tenchuyen,
+                chieu: chieu,
+                diemdi: diemdi,
+                diemden: diemden,
+                soghe: soghe,
+                ngaydi: ngaydi,
+                ngayve: ngayve,
+                hinhanh: hinhanh
+            };
 
+            var index = data.vemaybay.findIndex(chuyenbay => chuyenbay.id === id);
+            data.vemaybay[index] = updatedFlight;
+
+            // Here you should make an AJAX PUT request to your backend to update the JSON file
             $.ajax({
-                url: 'http://localhost:3000/vemaybay/' + id,
+                url: 'http://your-backend-server-url/update-vemaybay/' + id, // Your backend endpoint
                 type: 'PUT',
-                data: JSON.stringify(data),
+                data: JSON.stringify(updatedFlight),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(response) {
-                    taiDanhSachChuyenBay(); 
+                    taiDanhSachChuyenBay(data); 
                     datLaiForm();
                     $('#btnCapNhat').replaceWith('<button type="button" class="btn btn-primary col-md-12" id="btnGui">Đăng tin</button>');
-
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi:', error);
@@ -316,7 +320,9 @@
             $('#hinhanh').val('');
             $('#divNgayVe').hide();
         }
-        
-    </script>
+    })
+    .catch(error => console.error('Error fetching JSON:', error));
+</script>
+
 </body>
 </html>
