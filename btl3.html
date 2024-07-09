@@ -127,60 +127,69 @@
                     $('#ngayve').val('');
                 }
             });
+$('#btnGui').click(function() {
+    var tenchuyen = $('#tenchuyen').val();
+    var chieu = $('#chieu').val();
+    var diemdi = $('#diemdi').val();
+    var diemden = $('#diemden').val();
+    var ngaydi = $('#ngaydi').val();
+    var ngayve = $('#ngayve').val();
+    var soghe = $('#soghe').val();
+    var hinhanh = $('#hinhanh').val();
 
-            $('#btnGui').click(function() {
-                var tenchuyen = $('#tenchuyen').val();
-                var chieu = $('#chieu').val();
-                var diemdi = $('#diemdi').val();
-                var diemden = $('#diemden').val();
-                var ngaydi = $('#ngaydi').val();
-                var ngayve = $('#ngayve').val();
-                var soghe = $('#soghe').val();
-                var hinhanh = $('#hinhanh').val();
-                if ( !diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
-                    alert('Vui lòng nhập đầy đủ thông tin.');
-                    return;
-                }
-                if (isNaN(soghe) || soghe <= 0) {
-                    alert('Số ghế phải là số tự nhiên lớn hơn 0.');
-                    return;
-                }
-                if (chieu === "1" && ngayve < ngaydi) {
-                    alert('Ngày về không được trước ngày đi.');
-                    return;
-                }
-                if (chieu === "0" && ngayve !== "") {
-                    alert('Không thể chọn ngày về khi là một chiều.');
-                    return;
-                }
+    // Kiểm tra tính hợp lệ của các giá trị
+    if (!diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
+        alert('Vui lòng nhập đầy đủ thông tin.');
+        return;
+    }
 
-                var data1 = {
-                    tenchuyen: tenchuyen,
-                    chieu: chieu,
-                    diemdi: diemdi,
-                    diemden: diemden,
-                    soghe: soghe,
-                    ngaydi: ngaydi,
-                    ngayve: ngayve,
-                    hinhanh: hinhanh
-                };
+    if (isNaN(soghe) || soghe <= 0) {
+        alert('Số ghế phải là số tự nhiên lớn hơn 0.');
+        return;
+    }
 
-                $.ajax({
-                    url: 'http://localhost:3000/vemaybay',
-                    type: 'POST',
-                    data: JSON.stringify(data1data1),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(response) {
-                        taiDanhSachChuyenBay();
-                        datLaiForm();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Lỗi:', error);
-                        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
-                    }
-                });
-            });
+    if (chieu === "1" && ngayve < ngaydi) {
+        alert('Ngày về không được trước ngày đi.');
+        return;
+    }
+
+    if (chieu === "0" && ngayve !== "") {
+        alert('Không thể chọn ngày về khi là một chiều.');
+        return;
+    }
+
+    var data1 = {
+        tenchuyen: tenchuyen,
+        chieu: chieu,
+        diemdi: diemdi,
+        diemden: diemden,
+        soghe: soghe,
+        ngaydi: ngaydi,
+        ngayve: ngayve,
+        hinhanh: hinhanh
+    };
+
+    // Gửi yêu cầu POST để đăng tin chuyến bay lên GitHub JSON
+    $.ajax({
+        url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json',
+        type: 'POST',
+        data: JSON.stringify(data1),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(response) {
+            // Sau khi đăng tin thành công, tải lại danh sách chuyến bay để cập nhật giao diện
+            taiDanhSachChuyenBay();
+            // Đặt lại các trường form về trạng thái mặc định để người dùng có thể đăng tin mới
+            datLaiForm();
+        },
+        error: function(xhr, status, error) {
+            console.error('Lỗi:', error);
+            alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
+        }
+    });
+});
+
+           
         });
 
         function taiDanhSachChuyenBay() {
@@ -209,98 +218,111 @@
         }
 
         function xoaChuyenBay(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
-                $.ajax({
-                    url: 'http://localhost:3000/vemaybay/' + id,
-                    type: 'DELETE',
-                    success: function(response) {
-                        taiDanhSachChuyenBay();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Lỗi:', error);
-                        alert('Đã xảy ra lỗi khi xóa chuyến bay.');
-                    }
-                });
+    // Hiển thị hộp thoại xác nhận xóa chuyến bay
+    if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
+        // Gửi yêu cầu DELETE để xóa chuyến bay từ GitHub JSON
+        $.ajax({
+            url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/' + id,
+            type: 'DELETE',
+            success: function(response) {
+                // Sau khi xóa thành công, tải lại danh sách chuyến bay để cập nhật giao diện
+                taiDanhSachChuyenBay();
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi:', error);
+                alert('Đã xảy ra lỗi khi xóa chuyến bay.');
             }
+        });
+    }
+}
+
+       function suaChuyenBay(id) {
+    // Gửi yêu cầu GET để lấy dữ liệu chi tiết của chuyến bay từ GitHub
+    $.get("https://nguyenphuomgnam.github.io/namhuytien/BTL.json", function(data, status){
+        // Điền các giá trị vào các trường form
+        $('#tenchuyen').val(data.vemaybay[id].tenchuyen);
+        $('#chieu').val(data.vemaybay[id].chieu);
+        $('#diemdi').val(data.vemaybay[id].diemdi);
+        $('#diemden').val(data.vemaybay[id].diemden);
+        $('#soghe').val(data.vemaybay[id].soghe);
+        $('#ngaydi').val(data.vemaybay[id].ngaydi);
+        $('#ngayve').val(data.vemaybay[id].ngayve);
+        $('#hinhanh').val(data.vemaybay[id].hinhanh);
+    
+        // Hiển thị hoặc ẩn trường ngày về tùy vào loại chuyến bay (một chiều hoặc khứ hồi)
+        if (data.vemaybay[id].chieu === "1") {
+            $('#divNgayVe').show();
+        } else {
+            $('#divNgayVe').hide();
         }
+    
+        // Thay thế nút "Đăng tin" bằng nút "Cập nhật" để người dùng có thể cập nhật thông tin
+        $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
+    });
+}
+       function capNhatChuyenBay(id) {
+    var tenchuyen = $('#tenchuyen').val();
+    var chieu = $('#chieu').val();
+    var diemdi = $('#diemdi').val();
+    var diemden = $('#diemden').val();
+    var soghe = $('#soghe').val();
+    var hinhanh = $('#hinhanh').val();
+    var ngaydi = $('#ngaydi').val();
+    var ngayve = $('#ngayve').val();
 
-        function suaChuyenBay(id) {
-            $.get("http://localhost:3000/vemaybay/" + id, function(data, status){
-                $('#tenchuyen').val(data.tenchuyen);
-                $('#chieu').val(data.chieu);
-                $('#diemdi').val(data.diemdi);
-                $('#diemden').val(data.diemden);
-                $('#soghe').val(data.soghe);
-                $('#ngaydi').val(data.ngaydi);
-                $('#ngayve').val(data.ngayve);
-                $('#hinhanh').val(data.hinhanh);
-            
-                if (data.chieu=== "1") {
-                    $('#divNgayVe').show();
-                } else {
-                    $('#divNgayVe').hide();
-                }
-                $('#btnGui').replaceWith('<button class="form-control btn btn-primary" id="btnCapNhat" onclick="capNhatChuyenBay(\'' + id + '\')">Cập nhật</button>');
-            });
+    // Kiểm tra tính hợp lệ của các giá trị
+    if (!diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
+        alert('Vui lòng nhập đầy đủ thông tin.');
+        return;
+    }
+
+    if (isNaN(soghe) || soghe <= 0) {
+        alert('Số ghế phải là số tự nhiên lớn hơn 0.');
+        return;
+    }
+
+    if (chieu === "1" && ngayve < ngaydi) {
+        alert('Ngày về không được trước ngày đi.');
+        return;
+    }
+
+    if (chieu === "0" && ngayve !== "") {
+        alert('Không thể chọn ngày về khi là một chiều.');
+        return;
+    }
+
+    var data2 = {
+        tenchuyen: tenchuyen,
+        chieu: chieu,
+        diemdi: diemdi,
+        diemden: diemden,
+        soghe: soghe,
+        ngaydi: ngaydi,
+        ngayve: ngayve,
+        hinhanh: hinhanh
+    };
+
+    // Gửi yêu cầu PUT để cập nhật chuyến bay vào GitHub JSON
+    $.ajax({
+        url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/' + id,
+        type: 'PUT',
+        data: JSON.stringify(data2),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(response) {
+            // Sau khi cập nhật thành công, tải lại danh sách chuyến bay để cập nhật giao diện
+            taiDanhSachChuyenBay();
+            // Đặt lại các trường form về trạng thái mặc định
+            datLaiForm();
+            // Thay thế nút "Cập nhật" bằng nút "Đăng tin" để cho phép người dùng thực hiện thêm chuyến bay mới
+            $('#btnCapNhat').replaceWith('<button type="button" class="btn btn-primary col-md-12" id="btnGui">Đăng tin</button>');
+        },
+        error: function(xhr, status, error) {
+            console.error('Lỗi:', error);
+            alert('Đã xảy ra lỗi khi cập nhật chuyến bay.');
         }
-
-        function capNhatChuyenBay(id) {
-            var tenchuyen = $('#tenchuyen').val();
-            var chieu = $('#chieu').val();
-            var diemdi = $('#diemdi').val();
-            var diemden = $('#diemden').val();
-            var soghe = $('#soghe').val();
-            var hinhanh = $('#hinhanh').val();
-            var ngaydi = $('#ngaydi').val();
-            var ngayve = $('#ngayve').val();
-            if (!diemdi || !diemden || !soghe || !ngaydi || !tenchuyen) {
-                alert('Vui lòng nhập đầy đủ thông tin.');
-                return;
-            }
-
-            if (isNaN(soghe) || soghe <= 0) {
-                alert('Số ghế phải là số tự nhiên lớn hơn 0.');
-                return;
-            }
-            if (chieu === "1" && ngayve < ngaydi) {
-                alert('Ngày về không được trước ngày đi.');
-                return;
-            }
-            if (chieu === "0" && ngayve !== "") {
-                alert('Không thể chọn ngày về khi là một chiều.');
-                return;
-            }
-
-            var data2 = {
-                    tenchuyen: tenchuyen,
-                    chieu: chieu,
-                    diemdi: diemdi,
-                    diemden: diemden,
-                    soghe: soghe,
-                    ngaydi: ngaydi,
-                    ngayve: ngayve,
-                    hinhanh: hinhanh
-                };
-
-            $.ajax({
-                url: 'http://localhost:3000/vemaybay/' + id,
-                type: 'PUT',
-                data: JSON.stringify(data2),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function(response) {
-                    taiDanhSachChuyenBay(); 
-                    datLaiForm();
-                    $('#btnCapNhat').replaceWith('<button type="button" class="btn btn-primary col-md-12" id="btnGui">Đăng tin</button>');
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Lỗi:', error);
-                    alert('Đã xảy ra lỗi khi cập nhật chuyến bay.');
-                }
-            });
-        }
-
+    });
+}
         function datLaiForm() {
             $('#chieu').val('0');
             $('#tenchuyen').val('');
