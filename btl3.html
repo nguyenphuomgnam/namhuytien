@@ -110,13 +110,10 @@
         <div class="col-md-12 col-12 p-0" style="height: 100px;">
         </div>
     </div>
-    <script>
-         fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.vemaybay); 
- $(document).ready(function() {
+<script>
+        $(document).ready(function() {
             taiDanhSachChuyenBay();
+
             $('#chieu').change(function() {
                 var chieu = $(this).val();
                 if (chieu === "1") {
@@ -153,7 +150,7 @@
                     return;
                 }
 
-                var data1 = {
+                var data = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -164,29 +161,31 @@
                     hinhanh: hinhanh
                 };
 
-      function themChuyenBay(data1) {
-         fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', {
-        method: 'POST',
-         headers: {
-        'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(data1)
-         })
-        .then(response => response.json())
-        .then(data => {
-        taiDanhSachChuyenBay();
-        datLaiForm();
-                   })
-       .catch(error => {
-        console.error('Lỗi:', error);
-        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
-    });
-}
+                $.ajax({
+                    url: 'http://localhost:3000/vemaybay',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                        taiDanhSachChuyenBay();
+                        datLaiForm();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Lỗi:', error);
+                        alert('Đã xảy ra lỗi khi đăng tin chuyến bay.');
+                    }
+                });
             });
         });
+
         function taiDanhSachChuyenBay() {
+            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.vemaybay); 
             $('#danhSachChuyenBay').empty();
-             data.vemaybay.forEach(function(chuyenbay) {
+            data.vemaybay.forEach(function(chuyenbay) {
                     var item = '<div class="row border border-secondary rounded m-1 mt-3">' + 
                         '<div class="mx-auto row col-md-10 col-12">'+ 
                         '<strong class="col-md-3 col-5">Tên chuyến:</strong> ' + '<div class="col-md-9 col-7">' + chuyenbay.tenchuyen + '</div>' +
@@ -207,6 +206,8 @@
                     '</div>';
                     $('#danhSachChuyenBay').append(item);
                 });
+                 })
+        .catch(error => console.error('Error fetching JSON:', error))
         }
 
         function xoaChuyenBay(id) {
@@ -271,7 +272,8 @@
                 alert('Không thể chọn ngày về khi là một chiều.');
                 return;
             }
-            var data2 = {
+
+            var data = {
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -285,7 +287,7 @@
             $.ajax({
                 url: 'http://localhost:3000/vemaybay/' + id,
                 type: 'PUT',
-                data: JSON.stringify(data2),
+                data: JSON.stringify(data),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(response) {
@@ -312,8 +314,7 @@
             $('#hinhanh').val('');
             $('#divNgayVe').hide();
         }
-             })
-        .catch(error => console.error('Error fetching JSON:', error))
-</script>
+        
+    </script>
 </body>
 </html>
