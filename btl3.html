@@ -155,6 +155,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 }
 
                 var newFlight = {
+                    id: data.vemaybay.length + 1, // Tạm thời tạo id mới, bạn cần phải xử lý id một cách thích hợp hơn
                     tenchuyen: tenchuyen,
                     chieu: chieu,
                     diemdi: diemdi,
@@ -167,9 +168,9 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
 
                 data.vemaybay.push(newFlight);
                 $.ajax({
-                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', // Your backend endpoint
+                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay', 
                     type: 'POST',
-                    data: JSON.stringify(data),
+                    data: JSON.stringify(data.vemaybay),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(response) {
@@ -212,9 +213,8 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
         function xoaChuyenBay(id) {
             if (confirm("Bạn có chắc chắn muốn xóa chuyến bay này?")) {
                 data.vemaybay = data.vemaybay.filter(chuyenbay => chuyenbay.id !== id);
-                // Here you should make an AJAX DELETE request to your backend to update the JSON file
                 $.ajax({
-                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, // Your backend endpoint
+                    url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, 
                     type: 'DELETE',
                     success: function(response) {
                         taiDanhSachChuyenBay(data);
@@ -284,13 +284,10 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                 ngayve: ngayve,
                 hinhanh: hinhanh
             };
-
             var index = data.vemaybay.findIndex(chuyenbay => chuyenbay.id === id);
             data.vemaybay[index] = updatedFlight;
-
-            // Here you should make an AJAX PUT request to your backend to update the JSON file
             $.ajax({
-                url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, // Your backend endpoint
+                url: 'https://nguyenphuomgnam.github.io/namhuytien/BTL.json/vemaybay/' + id, 
                 type: 'PUT',
                 data: JSON.stringify(updatedFlight),
                 contentType: "application/json; charset=utf-8",
@@ -321,6 +318,7 @@ fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
     })
     .catch(error => console.error('Error fetching JSON:', error));
 </script>
+
 
 </body>
 </html>
