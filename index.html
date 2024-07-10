@@ -121,54 +121,59 @@
         </div>
     </div>
     <script>
-$(document).ready(function() {
-    fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.vemaybay); 
+ $(document).ready(function() {
             let images = $('#hinhchieu img');
             let currentIndex = 0;
-
+            
             function showNextImage() {
                 images.eq(currentIndex).fadeOut(1000); 
                 currentIndex = (currentIndex + 1) % images.length;
                 images.eq(currentIndex).fadeIn(1000);  
             }
-
+            
             images.eq(currentIndex).show(); 
             setInterval(showNextImage, 5000); 
-
-            function laygiatri() {
-                data.vemaybay.forEach(function(item) { // Lặp qua từng item trong vemaybay
-                    var veHTML = '<div id="cacve" style="background-image: url('+ item.hinhanh+');">';
-                    veHTML += '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
-                    veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu === "1" ? 'Khứ hồi' : 'Một chiều')+ '</p>';
-                    veHTML += '<p><strong>Điểm đi:</strong> ' + item.diemdi + '</p>';
-                    veHTML += '<p><strong>Điểm đến:</strong> ' + item.diemden + '</p>';
-                    veHTML += '<p><strong>Ngày đi:</strong> ' + item.ngaydi + '</p>';
-                    if (item.chieu == "1") {
-                        veHTML += '<p><strong>Ngày về:</strong> ' + item.ngayve + '</p>';
+           function laygiatri() {
+                fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                    veHTML += '<p><strong>Số ghế trống:</strong> ' + item.soghe + '</p>';
-                    veHTML += '<a style="margin-top: ' + (item.chieu === "1" ? '99px' : '126px') + ';" class="datve" href="btl2.html?id=' + item.id + '">Đặt vé</a>';
-                    veHTML += '</div>';
-                    $('#bangve').append(veHTML);
-                });
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.vemaybay);
+                    data.vemaybay.forEach(function(item) {
+                        var veHTML = '<div id="cacve" style="background-image: url('+ item.hinhanh+');">';
+                        veHTML += '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
+                        veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu=== "1" ? 'Khứ hồi' : 'Một chiều')+ '</p>';
+                        veHTML += '<p><strong>Điểm đi:</strong> ' + item.diemdi + '</p>';
+                        veHTML += '<p><strong>Điểm đến:</strong> ' + item.diemden + '</p>';
+                        veHTML += '<p><strong>Ngày đi:</strong> ' + item.ngaydi + '</p>';
+                        if (item.chieu=="1"){
+                        veHTML += '<p><strong>Ngày về:</strong> ' + item.ngayve + '</p>';
+                        }
+                        veHTML += '<p><strong>Số ghế trống:</strong> ' + item.soghe + '</p>';
+                        veHTML += '<a style="margin-top: ' + (item.chieu === "1" ? '99px' : '126px') + ';" class="datve" href="btl2.html?id=' + item.id + '">Đặt vé</a>';
+                        veHTML += '</div>';
+                        $('#bangve').append(veHTML);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON:', error);
+                    alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
             }
             laygiatri();
-
             $('#ql').click(function() {
-                var mk = prompt('Hãy nhập mật khẩu cho quản trị viên!');
-                if (mk == 'namhuytien') {
+                var mk = prompt('hay nhap mat khau cho quan tri vien!');
+                if (mk=='namhuytien') {
                     window.location.href = 'btl3.html';
-                } else {
-                    alert('Rất tiếc, bạn không thể truy cập thành công!');
+                }
+                else {
+                    alert('rat tiec ban truy cap khong thanh cong!')
                 }
             });
-        })
-        .catch(error => console.error('Error fetching JSON:', error))
-});
+        });
 </script>
-
 </body>
 </html>
