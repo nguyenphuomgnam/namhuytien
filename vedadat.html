@@ -105,7 +105,6 @@
     <script>
         $(document).ready(function() {
     function laygiatri2() {
-       function laygiatri2() {
                 fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
                     .then(response => {
                         if (!response.ok) {
@@ -132,11 +131,6 @@
                 veHTML += '</div>';
                 $('#vedadat').append(veHTML);
             });
-                        })
-                    .catch(error => {
-                        console.error('Error fetching JSON:', error);
-                        alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
-                    });
             $('#vedadat').on('click', '.qr-code', function() {
                 var src = $(this).attr('src');
                 $('#qrImage').attr('src', src);
@@ -162,7 +156,11 @@
                     alert('Bạn đã nhập sai yêu cầu đã bị hủy!');
                 }
             });
-        });
+         })
+                    .catch(error => {
+                        console.error('Error fetching JSON:', error);
+                        alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
+                    });
     }
     laygiatri2();
     $('#ql').click(function() {
