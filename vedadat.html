@@ -114,7 +114,7 @@
                 })
                 .then(data => {
                     console.log(data.vemaybay);
-                    data.vemaybay.forEach(function(item) {
+                    data.vemaybay2.forEach(function(item) {
                         var veHTML = '<div id="cacve2" style="background-image: url(' + item.hinhanh + ');">';
                         veHTML += '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
                         veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</p>';
