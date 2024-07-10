@@ -121,7 +121,7 @@
         </div>
     </div>
     <script>
- $(document).ready(function() {
+        $(document).ready(function() {
             let images = $('#hinhchieu img');
             let currentIndex = 0;
             
@@ -134,16 +134,8 @@
             images.eq(currentIndex).show(); 
             setInterval(showNextImage, 5000); 
            function laygiatri() {
-                fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data.vemaybay);
-                    data.vemaybay.forEach(function(item) {
+                $.get("http://localhost:3000/vemaybay", function(data, status) {
+                    data.forEach(function(item) {
                         var veHTML = '<div id="cacve" style="background-image: url('+ item.hinhanh+');">';
                         veHTML += '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
                         veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu=== "1" ? 'Khứ hồi' : 'Một chiều')+ '</p>';
@@ -158,10 +150,7 @@
                         veHTML += '</div>';
                         $('#bangve').append(veHTML);
                     });
-                })
-                .catch(error => {
-                    console.error('Error fetching JSON:', error);
-                    alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
+                });
             }
             laygiatri();
             $('#ql').click(function() {
@@ -174,6 +163,6 @@
                 }
             });
         });
-</script>
+    </script>
 </body>
 </html>
