@@ -188,14 +188,12 @@
                     var hinhanh = item.hinhanh;
                     $('#ticketInfo').append(veHTML);
                     $('#ticketInfo').data('hinhanh', hinhanh); 
-                } else {
-                    $('#ticketInfo').append('<p>Không tìm thấy thông tin vé.</p>');
-                }
+                } 
             }).fail(function() {
                 $('#ticketInfo').append('<p>Đã xảy ra lỗi khi tải thông tin vé.</p>');
             });
             })
-                .catch(error => {
+             .catch(error => {
                     console.error('Error fetching JSON:', error);
                     alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
                     });
