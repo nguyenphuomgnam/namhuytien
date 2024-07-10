@@ -174,9 +174,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data.vemaybay);
+                console.log(data.vemaybay);
+                    let dk=0;
                 data.vemaybay.forEach(function(item) {
                 if (item.id === idVe) {
+                    dk++;
                     var veHTML = '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
                     veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</p>';
                     veHTML += '<p><strong>Điểm đi:</strong> ' + item.diemdi + '</p>';
@@ -188,10 +190,11 @@
                     var hinhanh = item.hinhanh;
                     $('#ticketInfo').append(veHTML);
                     $('#ticketInfo').data('hinhanh', hinhanh); 
-                } 
-            }).fail(function() {
-                $('#ticketInfo').append('<p>Đã xảy ra lỗi khi tải thông tin vé.</p>');
-            });
+                }
+                if (dk==0){
+                     $('#ticketInfo').append('<p>Không tìm thấy thông tin vé.</p>');
+                }
+            })
             })
              .catch(error => {
                     console.error('Error fetching JSON:', error);
