@@ -123,10 +123,6 @@
         </div>
     </div>
     <script>
-        fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
         $('#ql').click(function() {
                 var mk = prompt('hay nhap mat khau cho quan tri vien!');
                 if (mk=='namhuytien') {
@@ -144,6 +140,10 @@
                     alert('Vui lòng nhập đầy đủ thông tin.');
                     return;
                 }
+            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json') 
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.vemaybay); 
                 $('#bangve').empty();
                 data.vemaybay.forEach(function(item) {
                     if (diemdi === item.diemdi && diemden === item.diemden) {
@@ -166,9 +166,9 @@
                 if (dk==0) {
                 alert('Xin lỗi không có chuyến bay bạn tìm kiếm!');
             }
+         })
+        .catch(error => console.error('Error fetching JSON:', error))
         }
-             })
-      .catch(error => console.error('Error fetching JSON:', error));
     </script>
 </body>
 </html>
