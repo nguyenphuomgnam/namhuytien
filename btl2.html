@@ -152,13 +152,6 @@
     </div>
 </div>
 <script>
-    fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        // Xử lý dữ liệu JSON ở đây
-      })
-      .catch(error => console.error('Error fetching JSON:', error))
     $(document).ready(function() {
         $('#ql').click(function() {
                 var mk = prompt('hay nhap mat khau cho quan tri vien!');
@@ -173,17 +166,26 @@
         var idVe = urlParams.get('id');
 
         if (idVe) {
-            $.get("http://localhost:3000/vemaybay/" + idVe, function(data, status) {
-                if (status === "success" && data) {
-                    var veHTML = '<p><strong>Chuyến bay:</strong> ' + data.tenchuyen + '</p>';
-                    veHTML += '<p><strong>Chiều:</strong> ' + (data.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</p>';
-                    veHTML += '<p><strong>Điểm đi:</strong> ' + data.diemdi + '</p>';
-                    veHTML += '<p><strong>Điểm đến:</strong> ' + data.diemden + '</p>';
-                    veHTML += '<p><strong>Ngày đi:</strong> ' + data.ngaydi + '</p>';
-                    if (data.chieu === "1") {
-                        veHTML += '<p><strong>Ngày về:</strong> ' + data.ngayve + '</p>';
+            fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                    var hinhanh = data.hinhanh;
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.vemaybay);
+                data.vemaybay.forEach(function(item) {
+                if (item.id === idVe) {
+                    var veHTML = '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
+                    veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</p>';
+                    veHTML += '<p><strong>Điểm đi:</strong> ' + item.diemdi + '</p>';
+                    veHTML += '<p><strong>Điểm đến:</strong> ' + item.diemden + '</p>';
+                    veHTML += '<p><strong>Ngày đi:</strong> ' + item.ngaydi + '</p>';
+                    if (item.chieu === "1") {
+                        veHTML += '<p><strong>Ngày về:</strong> ' + item.ngayve + '</p>';
+                    }
+                    var hinhanh = item.hinhanh;
                     $('#ticketInfo').append(veHTML);
                     $('#ticketInfo').data('hinhanh', hinhanh); 
                 } else {
@@ -192,6 +194,11 @@
             }).fail(function() {
                 $('#ticketInfo').append('<p>Đã xảy ra lỗi khi tải thông tin vé.</p>');
             });
+            })
+                .catch(error => {
+                    console.error('Error fetching JSON:', error);
+                    alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
+                    });
         } else {
             $('#ticketInfo').append('<p>ID vé không được cung cấp.</p>');
         }
