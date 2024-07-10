@@ -89,7 +89,32 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="qrModal" tabvemaybay2.forEach(function(item) {
+     <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="qrModalLabel">QR Code</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <img id="qrImage" src="" alt="QR Code" style="width: 100%;">
+            </div>
+          </div>
+        </div>
+      </div>
+    <script>
+        $(document).ready(function() {
+    function laygiatri2() {
+        fetch('https://nguyenphuomgnam.github.io/namhuytien/BTL.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.vemaybay);
+                    data.vemaybay.forEach(function(item) {
                         var veHTML = '<div id="cacve2" style="background-image: url(' + item.hinhanh + ');">';
                         veHTML += '<p><strong>Chuyến bay:</strong> ' + item.tenchuyen + '</p>';
                         veHTML += '<p><strong>Chiều:</strong> ' + (item.chieu === "1" ? 'Khứ hồi' : 'Một chiều') + '</p>';
